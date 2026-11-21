@@ -1,0 +1,80 @@
+@page
+@model AutoLog.Pages.Vehicles.IndexModel
+@{
+    ViewData["Title"] = "Vozila";
+}
+
+<h2>Vozila</h2>
+
+<div class="card mb-4">
+    <div class="card-header">Dodaj novo vozilo</div>
+    <div class="card-body">
+        <form method="post" asp-page-handler="Add" class="row g-3">
+            <div class="col-md-3">
+                <label asp-for="NewVehicle.Name" class="form-label"></label>
+                <input asp-for="NewVehicle.Name" class="form-control" placeholder="npr. Audi A3 1.6 TDI" />
+                <span asp-validation-for="NewVehicle.Name" class="text-danger"></span>
+            </div>
+            <div class="col-md-2">
+                <label asp-for="NewVehicle.LicensePlate" class="form-label"></label>
+                <input asp-for="NewVehicle.LicensePlate" class="form-control" placeholder="NS-123-AB" />
+                <span asp-validation-for="NewVehicle.LicensePlate" class="text-danger"></span>
+            </div>
+            <div class="col-md-2">
+                <label asp-for="NewVehicle.CurrentMileage" class="form-label"></label>
+                <input asp-for="NewVehicle.CurrentMileage" class="form-control" />
+            </div>
+            <div class="col-md-2">
+                <label asp-for="NewVehicle.LastServiceMileage" class="form-label"></label>
+                <input asp-for="NewVehicle.LastServiceMileage" class="form-control" />
+            </div>
+            <div class="col-md-1">
+                <label asp-for="NewVehicle.ServiceIntervalKm" class="form-label">Int. km</label>
+                <input asp-for="NewVehicle.ServiceIntervalKm" class="form-control" />
+            </div>
+            <div class="col-md-2">
+                <label asp-for="NewVehicle.RegistrationExpiry" class="form-label"></label>
+                <input asp-for="NewVehicle.RegistrationExpiry" class="form-control" type="date" />
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Sačuvaj vozilo</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<table class="table table-bordered table-hover">
+    <thead class="table-light">
+        <tr>
+            <th>Vozilo</th>
+            <th>Registracija</th>
+            <th>Trenutna km</th>
+            <th>Poslednji servis</th>
+            <th>Interval</th>
+            <th>Registracija do</th>
+            <th>Akcija</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var v in Model.Vehicles)
+        {
+            <tr>
+                <td>@v.Name</td>
+                <td>@v.LicensePlate</td>
+                <td>@v.CurrentMileage.ToString("N0") km</td>
+                <td>@v.LastServiceMileage.ToString("N0") km</td>
+                <td>@v.ServiceIntervalKm.ToString("N0") km</td>
+                <td>@v.RegistrationExpiry.ToString("dd.MM.yyyy.")</td>
+                <td>
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@v.Id" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-danger">Obriši</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
