@@ -1,0 +1,70 @@
+﻿@page
+@model AutoLog.Pages.IndexModel
+@{
+    ViewData["Title"] = "Početna";
+}
+
+<h1 class="mb-3">AutoLog – Evidencija održavanja i troškova vozila</h1>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card border-primary">
+            <div class="card-body">
+                <h6 class="text-muted">Broj vozila</h6>
+                <h3>@Model.VehiclesStatus.Count</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-success">
+            <div class="card-body">
+                <h6 class="text-muted">Ukupni troškovi (gorivo / ostalo)</h6>
+                <h3>@Model.TotalExpenses.ToString("N0") RSD</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-warning">
+            <div class="card-body">
+                <h6 class="text-muted">Ukupno uloženo u servise</h6>
+                <h3>@Model.TotalServicesCost.ToString("N0") RSD</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4>Status vozila i podsetnici</h4>
+@if (!Model.VehiclesStatus.Any())
+{
+    <div class="alert alert-info">
+        Još nema unetih vozila. Idi na stranicu <a asp-page="/Vehicles/Index">Vozila</a> i dodaj prvo vozilo.
+    </div>
+}
+else
+{
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Vozilo</th>
+                <th>Registracija</th>
+                <th>Trenutna km</th>
+                <th>Do sledećeg servisa</th>
+                <th>Registracija ističe za</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.VehiclesStatus)
+            {
+                <tr>
+                    <td>@item.Vehicle.Name</td>
+                    <td>@item.Vehicle.LicensePlate</td>
+                    <td>@item.Vehicle.CurrentMileage.ToString("N0") km</td>
+                    <td>@item.KmLeft.ToString("N0") km</td>
+                    <td>@item.DaysLeft dana</td>
+                    <td><span class="badge bg-secondary">@item.StatusText</span></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
