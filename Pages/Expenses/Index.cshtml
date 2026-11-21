@@ -1,0 +1,85 @@
+@page
+@model AutoLog.Pages.Expenses.IndexModel
+@{
+    ViewData["Title"] = "Troškovi";
+}
+
+<h2>Evidencija troškova</h2>
+
+<div class="card mb-4">
+    <div class="card-header">Dodaj trošak</div>
+    <div class="card-body">
+        <form method="post" asp-page-handler="Add" class="row g-3">
+            <div class="col-md-3">
+                <label asp-for="NewExpense.VehicleId" class="form-label"></label>
+                <select asp-for="NewExpense.VehicleId" asp-items="Model.VehicleOptions" class="form-select"></select>
+            </div>
+            <div class="col-md-2">
+                <label asp-for="NewExpense.Category" class="form-label"></label>
+                <select asp-for="NewExpense.Category" class="form-select">
+                    <option value="Gorivo">Gorivo</option>
+                    <option value="Registracija">Registracija</option>
+                    <option value="Delovi">Delovi</option>
+                    <option value="Pranje">Pranje</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label asp-for="NewExpense.Amount" class="form-label"></label>
+                <input asp-for="NewExpense.Amount" class="form-control" />
+            </div>
+            <div class="col-md-2">
+                <label asp-for="NewExpense.ExpenseDate" class="form-label"></label>
+                <input asp-for="NewExpense.ExpenseDate" class="form-control" type="date" />
+            </div>
+            <div class="col-md-3">
+                <label asp-for="NewExpense.Description" class="form-label"></label>
+                <input asp-for="NewExpense.Description" class="form-control" placeholder="npr. Pun rezervoar" />
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Sačuvaj trošak</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<form method="get" class="row g-2 mb-3 align-items-center">
+    <div class="col-auto">
+        <label class="col-form-label">Filter kategorije:</label>
+    </div>
+    <div class="col-auto">
+        <select name="SelectedCategory" class="form-select" onchange="this.form.submit()">
+            <option value="Sve" selected="@(string.IsNullOrEmpty(Model.SelectedCategory) || Model.SelectedCategory == "Sve")">Sve</option>
+            <option value="Gorivo" selected="@(Model.SelectedCategory == "Gorivo")">Gorivo</option>
+            <option value="Registracija" selected="@(Model.SelectedCategory == "Registracija")">Registracija</option>
+            <option value="Delovi" selected="@(Model.SelectedCategory == "Delovi")">Delovi</option>
+            <option value="Pranje" selected="@(Model.SelectedCategory == "Pranje")">Pranje</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <strong>Ukupno: @Model.FilteredTotal.ToString("N0") RSD</strong>
+    </div>
+</form>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-light">
+        <tr>
+            <th>Datum</th>
+            <th>Vozilo</th>
+            <th>Kategorija</th>
+            <th>Opis</th>
+            <th>Iznos</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var e in Model.Expenses)
+        {
+            <tr>
+                <td>@e.ExpenseDate.ToString("dd.MM.yyyy.")</td>
+                <td>@e.Vehicle?.Name</td>
+                <td>@e.Category</td>
+                <td>@e.Description</td>
+                <td>@e.Amount.ToString("N0") RSD</td>
+            </tr>
+        }
+    </tbody>
+</table>

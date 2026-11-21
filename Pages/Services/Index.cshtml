@@ -1,0 +1,67 @@
+@page
+@model AutoLog.Pages.Services.IndexModel
+@{
+    ViewData["Title"] = "Servisi";
+}
+
+<h2>Evidencija servisa</h2>
+
+<div class="card mb-4">
+    <div class="card-header">Novi servisni zapis</div>
+    <div class="card-body">
+        <form method="post" asp-page-handler="Add" class="row g-3">
+            <div class="col-md-3">
+                <label asp-for="NewRecord.VehicleId" class="form-label"></label>
+                <select asp-for="NewRecord.VehicleId" asp-items="Model.VehicleOptions" class="form-select"></select>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="NewRecord.ServiceType" class="form-label"></label>
+                <input asp-for="NewRecord.ServiceType" class="form-control" placeholder="npr. Mali servis" />
+                <span asp-validation-for="NewRecord.ServiceType" class="text-danger"></span>
+            </div>
+            <div class="col-md-2">
+                <label asp-for="NewRecord.Mileage" class="form-label"></label>
+                <input asp-for="NewRecord.Mileage" class="form-control" />
+            </div>
+            <div class="col-md-2">
+                <label asp-for="NewRecord.Cost" class="form-label"></label>
+                <input asp-for="NewRecord.Cost" class="form-control" />
+            </div>
+            <div class="col-md-2">
+                <label asp-for="NewRecord.ServiceDate" class="form-label"></label>
+                <input asp-for="NewRecord.ServiceDate" class="form-control" type="date" />
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Dodaj servis</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-light">
+        <tr>
+            <th>Datum</th>
+            <th>Vozilo</th>
+            <th>Vrsta servisa</th>
+            <th>Kilometraža</th>
+            <th>Cena</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model.Records)
+        {
+            <tr>
+                <td>@r.ServiceDate.ToString("dd.MM.yyyy.")</td>
+                <td>@r.Vehicle?.Name</td>
+                <td>@r.ServiceType</td>
+                <td>@r.Mileage.ToString("N0") km</td>
+                <td>@r.Cost.ToString("N0") RSD</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
